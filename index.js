@@ -39,3 +39,17 @@ app.get('/api/registerTime/', (req, res) => {
   fs.appendFile(path.join(__dirname, '/times_backup.csv'), date.toISOString() + '\n', (err) => { if (err) console.log(err) })
   res.send('received time ' + date.toISOString())
 })
+
+app.use((req, res, next) => {
+  const err = new Error('Not Found')
+  err.status = 404
+  next(err)
+})
+
+app.use((err, req, res, next) => {
+  res.localsmessage = err.message
+  res.locals.error = req.app.get('env') === 'development' ? err : {}
+
+  res.status(err.status || 500)
+  res.send('Error')
+})
