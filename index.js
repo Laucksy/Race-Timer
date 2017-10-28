@@ -4,10 +4,6 @@ var app = require('express')()
 // var http = require('http').Server(app)
 var port = process.env.PORT || 3000
 
-app.listen(port, '0.0.0.0', () => {
-  console.log('listening on *:' + port)
-})
-
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '/index.html'))
 })
@@ -52,4 +48,8 @@ app.use((err, req, res, next) => {
 
   res.status(err.status || 500)
   res.send('Error')
+})
+
+app.listen(port, '0.0.0.0', () => {
+  console.log('listening on *:' + port)
 })
