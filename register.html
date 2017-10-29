@@ -33,7 +33,7 @@
               data:$('#myForm').serialize(),
               success:function(){
                   alert('Runner added successfully');
-                  window.location.href('/');
+                  window.location.href = '/';
               },
               error: function(err) {
                   alert(err.message);
