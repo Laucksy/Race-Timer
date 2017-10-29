@@ -25,6 +25,8 @@
 
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
     <script>
+      var interval = null;
+
       $('#myForm').submit(function(e){
           e.preventDefault();
           $.ajax({
@@ -33,6 +35,7 @@
               data:$('#myForm').serialize(),
               success:function(){
                   alert('Runner added successfully');
+                  if (interval) clearInterval(interval);
                   window.location.href = '/';
               },
               error: function(err) {
@@ -42,7 +45,7 @@
       });
 
       $(document).ready(function () {
-        setInterval(function () {
+        interval = setInterval(function () {
           $.ajax({
             url:'/api/freeCheckpoints',
             type:'get',
