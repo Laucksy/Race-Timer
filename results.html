@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Mental Miles Race Timer</title>
+    <style>
+      * { margin: 10px; padding: 0; box-sizing: border-box; }
+    </style>
+  </head>
+  <body>
+    <h1>Mental Miles 5K Runner Results</h1>
+    <ul id="results"></ul>
+
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    <script>
+      $(document).ready(function () {
+        //setInterval(function () {
+          $.ajax({
+            url:'/api/getResults',
+            type:'get',
+            success:function(data) {
+              // console.log(data);
+              var li = document.getElementById("results");
+              while (li.hasChildNodes()) {
+                  li.removeChild(li.lastChild);
+              }
+              for(var i = 0; i < data.length; i++) {
+                var person = data[i].split(',');
+                var element = document.createElement("li");
+                element.innerHTML = "Runner: " + person[0] + "__________Heat: " + person[1] + "__________Checkpoint: " + person[2] + "__________Time: " + person[3];
+                li.appendChild(element);
+              }
+            },
+            error: function(err) {
+              alert(err.message);
+            }
+          })
+        //}, 500);
+      });
+    </script>
+  </body>
+</html>
