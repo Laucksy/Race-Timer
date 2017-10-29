@@ -1,0 +1,69 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Mental Miles Race Timer</title>
+    <style>
+      * { margin: 10px; padding: 0; box-sizing: border-box; }
+    </style>
+  </head>
+  <body>
+    <h1>Mental Miles 5K Runner Registration</h1>
+    <form id="myForm" target="_blank">
+      Name: <input id="name" name="name" /> <br />
+      Type: <select name="type">
+            <option value="Runner" selected>Runner</option>
+            <option value="Walker">Walker</option>
+         </select> <br />
+      Heat: <select name="heat">
+            <option value="1" selected>Heat 1</option>
+            <option value="2">Heat 2</option>
+            <option value="3">Heat 3</option>
+         </select> <br />
+      Checkpoint: <select id="checkpoints" name="id"></select> <br />
+      <input type="submit" value="Submit" />
+    </form>
+
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    <script>
+      $('#myForm').submit(function(e){
+          e.preventDefault();
+          $.ajax({
+              url:'/api/registerRunner',
+              type:'post',
+              data:$('#myForm').serialize(),
+              success:function(){
+                  alert('Runner added successfully');
+              },
+              error: function(err) {
+                  alert(err.message);
+              }
+          });
+      });
+
+      $(document).ready(function () {
+        setInterval(function () {
+          $.ajax({
+            url:'/api/freeCheckpoints',
+            type:'get',
+            success:function(data) {
+              // console.log(data);
+              var select = document.getElementById("checkpoints");
+              while (select.hasChildNodes()) {
+                  select.removeChild(select.lastChild);
+              }
+              for(var i = 0; i < data.length; i++) {
+                var option = document.createElement("option");
+                option.value = data[i];
+                option.innerHTML = data[i];
+                select.appendChild(option);
+              }
+            },
+            error: function(err) {
+              alert(err.message);
+            }
+          })
+        }, 500);
+      });
+    </script>
+  </body>
+</html>
