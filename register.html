@@ -33,7 +33,7 @@
               url:'/api/registerRunner',
               type:'post',
               data:$('#myForm').serialize(),
-              success:function(){
+              success:function(data){
                   alert('Runner added successfully');
                   if (interval) clearInterval(interval);
                   window.location.href = '/';
