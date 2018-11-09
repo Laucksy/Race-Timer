@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 bg-dark">
+    <h5 class="my-0 mr-md-auto font-weight-normal text-light">Lafayette College Mental Health Coalition</h5>
+  </div>
+
+  <section class="jumbotron text-center">
+    <div class="container">
+      <h1 class="jumbotron-heading">Welcome to the Mental Miles Race Timer!</h1>
+      <p class="lead text-muted">This is a tool for recording race times based on registered runner information.</p>
+    </div>
+  </section>
+
+  <br/>
+  <br/>
+  <div id="runner-input-table" class="container">
+    <div class="row">
+      <div class="col-xl">
+        <div id="accordion" class="mb-3">
+          <div class="card">
+            <div class="card-header bg-secondary" id="heading0">
+              <h5 class="mb-0"><button class="btn btn-secondary collapsed" data-toggle="collapse" data-target="#collapse0" aria-expanded="false" aria-controls="collapse0">Runner List</button></h5>
+            </div>
+            <div class="collapse show" id="collapse0" aria-labelledby="heading0">
+              <div class="card-body">
+                <textarea id="runnerInput" style="width: 100%; height: 500px; overflow-y: scroll;"></textarea><br/>
+                <button class="btn btn-primary" onclick="saveData()">Save</button>
+              </div>
+            </div>
+            <div class="card-header bg-secondary" id="heading1">
+              <h5 class="mb-0"><button class="btn btn-secondary collapsed" data-toggle="collapse" data-target="#collapse1" aria-expanded="false" aria-controls="collapse1">Runner Times</button></h5>
+            </div>
+            <div class="collapse" id="collapse1" aria-labelledby="heading1">
+              <div id="runner-time-table" class="container">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <center>
+    <button class="btn btn-primary" onclick="startHeat(0)">Start Heat 1</button>
+    <button class="btn btn-primary" onclick="startHeat(1)">Start Heat 2</button>
+    <button class="btn btn-primary" onclick="startHeat(2)">Start Heat 3</button>
+  </center>
+
+  <div id="runner-list-table" class="container">
+  </div>
+
+  <br/>
+  <br/>
+  <br/>
+
+  <script type="text/javascript">
+    var heats = []
+    var runners = []
+
+    window.onload = function () {
+      loadData();
+    }
+
+    function updateList() {
+      let table = document.getElementById("runner-list-table");
+      while (table.firstChild) {
+        table.removeChild(table.firstChild);
+      }
+      for (let i = 0; i < runners.length; i++) {
+        if (runners[i].split(",").length > 3) continue;
+
+        let row = document.createElement("div");
+        row.classList.add("row");
+
+        // let cellZero = document.createElement("div");
+        // cellZero.classList.add("col-xl");
+        // cellZero.innerHTML = "<button class='btn btn-primary' onclick='finishRunner(" + runners[i].split(",")[1] + ")'>Finish</button>";
+
+        let cellOne = document.createElement("div");
+        cellOne.classList.add("col-xl");
+        cellOne.innerHTML = "Number: " + runners[i].split(",")[1] + " <button class='btn btn-primary' onclick='finishRunner(" + (runners[i].split(",")[1] - 1) + ")'>Finish</button>";
+
+        let cellTwo = document.createElement("div");
+        cellTwo.classList.add("col-xl");
+        cellTwo.innerHTML = "     Runner: " + runners[i].split(",")[0];
+
+        let cellThree = document.createElement("div");
+        cellThree.classList.add("col-xl");
+        cellThree.innerHTML = "     Heat: " + runners[i].split(",")[2];
+
+        // row.appendChild(cellZero);
+        row.appendChild(cellOne);
+        row.appendChild(cellTwo);
+        row.appendChild(cellThree);
+        table.appendChild(row);
+      }
+    }
+
+    function updateTimes() {
+      let table = document.getElementById("runner-time-table");
+      while (table.firstChild) {
+        table.removeChild(table.firstChild);
+      }
+      for (let i = 0; i < runners.length; i++) {
+        if (runners[i].split(",").length === 3) continue;
+
+        let row = document.createElement("div");
+        row.classList.add("row");
+        row.setAttribute("style", "margin-bottom: 7px;");
+
+        // let cellZero = document.createElement("div");
+        // cellZero.classList.add("col-xl");
+        // cellZero.innerHTML = "<button class='btn btn-primary' onclick='finishRunner(" + runners[i].split(",")[1] + ")'>Finish</button>";
+
+        let cellOne = document.createElement("div");
+        cellOne.classList.add("col-");
+        cellOne.innerHTML = "Number: " + runners[i].split(",")[1];
+
+        let cellTwo = document.createElement("div");
+        cellTwo.classList.add("col-md");
+        cellTwo.innerHTML = "     Runner: " + runners[i].split(",")[0];
+
+        let cellThree = document.createElement("div");
+        cellThree.classList.add("col-");
+        cellThree.innerHTML = "     Heat: " + runners[i].split(",")[2];
+
+        let cellFour = document.createElement("div");
+        cellFour.classList.add("col-xl");
+        cellFour.innerHTML = "     Finish: " + runners[i].split(",")[3];
+
+        let timeText = "";
+        if (heats[parseInt(runners[i].split(",")[2]) - 1] != "") {
+          let time = new Date(runners[i].split(",")[3]) - new Date(heats[parseInt(runners[i].split(",")[2]) - 1]);
+          time = Math.round(time / 1000);
+
+          let seconds = time % 60;
+          let minutes = (time - seconds) / 60;
+          timeText = "" + minutes + " minutes, " + seconds + " seconds";
+        }
+
+        let cellFive = document.createElement("div");
+        cellFive.classList.add("col-xl");
+        cellFive.innerHTML = "     Time: " + timeText;
+
+        // row.appendChild(cellZero);
+        row.appendChild(cellOne);
+        row.appendChild(cellTwo);
+        row.appendChild(cellThree);
+        row.appendChild(cellFour);
+        row.appendChild(cellFive);
+        table.appendChild(row);
+      }
+    }
+
+    function startHeat(num) {
+      if (heats[num] === "") {
+        heats[num] = (new Date()).toISOString();
+        alert("You started a heat. Congrats! Have fun :)");
+      }
+
+      saveData(false);
+    }
+
+    function finishRunner(num) {
+      if (runners[num].split(",").length === 3) {
+        runners[num] += "," + (new Date()).toISOString();
+      }
+
+      saveData(false);
+    }
+
+    function loadData() {
+      runners = JSON.parse(localStorage.getItem("runners"));
+      heats = JSON.parse(localStorage.getItem("heats"));
+
+      var textarea = document.getElementById("runnerInput");
+      var str = "";
+      for (var i = 0; i < runners.length; i++) {
+        str += runners[i] + "\n";
+      }
+      textarea.value = str;
+
+      updateList();
+      updateTimes();
+    }
+
+    function saveData(fromInput = true) {
+      if (fromInput) {
+        var textarea = document.getElementById("runnerInput");
+        var data = textarea.value.trim().split("\n");
+        localStorage.setItem("runners", JSON.stringify(data));
+      } else {
+        localStorage.setItem("runners", JSON.stringify(runners));
+      }
+      localStorage.setItem("heats", JSON.stringify(heats));
+
+      loadData();
+    }
+  </script>
+</body>
+</html>
